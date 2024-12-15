@@ -21,7 +21,7 @@ public class ObservableImpl implements Observable {
     @Override
     public void notifyObservers() {
         for (Observer observer : observers) {
-            observer.update(value);
+            observer.update(this);
         }
     }
 

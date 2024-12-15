@@ -1,9 +1,6 @@
 package elhanchir.mohamed;
 
-import elhanchir.mohamed.observer.ObservableImpl;
-import elhanchir.mohamed.observer.Observer;
-import elhanchir.mohamed.observer.ObserverImpl1;
-import elhanchir.mohamed.observer.ObserverImpl2;
+import elhanchir.mohamed.observer.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +26,14 @@ public class Main {
         observable.addObserver(new Observer() {
             private final List<Integer> history = new ArrayList<>();
             @Override
-            public void update(int value) {
-                history.add(value);
-                System.out.println("************ OBSERVER 3 ************");
-                System.out.println("State SUM: " + history.stream().mapToInt(Integer::intValue).sum());
-                System.out.println("************************************");
+            public void update(Observable observable) {
+                if (observable instanceof ObservableImpl) {
+                    int value = ((ObservableImpl) observable).getValue();
+                    System.out.println("************ OBSERVER 3 ************");
+                    history.add(value);
+                    System.out.println("State AVG: " + history.stream().mapToInt(Integer::intValue).average().orElse(0));
+                    System.out.println("************************************");
+                }
             }
         });
 
@@ -41,10 +41,13 @@ public class Main {
         observable.setValue(12);
 
         //Observable est une interface fonctionnelle donc on peut utiliser une lambda expression
-        observable.addObserver(value -> {
-            System.out.println("************ OBSERVER 4 ************");
-            System.out.println("Value: " + value);
-            System.out.println("************************************");
+        observable.addObserver(observable1 -> {
+            if (observable1 instanceof ObservableImpl) {
+                int value = ((ObservableImpl) observable1).getValue();
+                System.out.println("************ OBSERVER 4 ************");
+                System.out.println("Value: " + value);
+                System.out.println("************************************");
+            }
         });
 
         observable.setValue(13);
